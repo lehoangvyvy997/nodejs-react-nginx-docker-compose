@@ -18,7 +18,7 @@ Build environment for nodes using docker compose
 
 Note: if has problems from the conflict port then end service conflicted or change a service port in ``docker-compose.yml`` continue rebuild container
 
-Watching files such as Dockerfile, docker-compose.yml, ./nginx/*.conf, package.json, .env, *config.js,... in order to have detail configurational information.
+Watching files such as ``Dockerfile, docker-compose.yml, ./nginx/*.conf, package.json, .env, *config.js,...`` in order to have detail configurational information.
 
 ## License
 FREE
