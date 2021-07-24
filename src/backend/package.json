@@ -1,0 +1,15 @@
+{
+  "name": "snMVC",
+  "version": "0.0.5",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js"
+  },
+  "author": "Inglebard",
+  "license": "MIT",
+  "dependencies": {
+    "ejs": "^2.5.8",
+    "express": "^4.16.3"
+  }
+}

@@ -1,0 +1,108 @@
+version: "3.3"
+services:
+  nginx:
+    image: nginx:1.21.1
+    container_name: nodejs-nginx
+    build: ./nginx
+    ports:
+      - "443:443"
+      - "80:80"
+    volumes:
+      - ./nginx/sites:/etc/nginx/sites-available
+      - ./mginx/ssl:/etc/nginx/ssl
+      - ./nginx/log:/var/log/nginx
+      - ./nginx/certs:/etc/nginx/certs
+    networks:
+      nodejs_server_subnet:
+        ipv4_address: 172.19.0.2
+
+  app-backend:
+    container_name: nodejs-api
+    image: node:13.12.0-alpine
+    stdin_open: true
+    tty: true
+    build: ./app/backend
+    volumes:
+      - ./src/backend:/var/www/html/backend/
+    ports:
+      - "4000:4000"
+      - "5000:5000"
+    command: npm start
+    networks:
+      nodejs_server_subnet:
+        ipv4_address: 172.19.0.3
+ 
+  app-frontend:
+    container_name: nodejs-client
+    image: node:14-alpine3.12
+    stdin_open: true
+    tty: true
+    build: ./app/frontend
+    volumes:
+      - ./src/frontend:/var/www/html/frontend/
+    ports:
+      - "4001:4000"
+      - "5001:5000"
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+    command: npm start
+    networks:
+      nodejs_server_subnet:
+        ipv4_address: 172.19.0.5
+  
+  mongodb:
+    image : mongo:5.0.1
+    container_name: nodejs-mongodb
+    environment:
+      MONGO_INITDB_DATABASE: TestDB
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: 1
+    volumes:
+      - ./mongodb/database:/data/db
+      - ./mongodb/init-mongo.js:/docker-entrypoint-initdb.d/init-mongo-js:ro
+    ports:
+      - 27017:27017
+    networks:
+      nodejs_server_subnet:
+        ipv4_address: 172.19.0.6
+
+  mysql:
+    container_name: nodejs-mysql57
+    image: mysql:5.7
+    volumes:
+      - ./data/db:/var/lib/mysql
+    environment:
+      MYSQL_DATABASE: nodejs-db
+      MYSQL_USER: 'root'
+      MYSQL_PASSWORD: '1'
+      MYSQL_ROOT_PASSWORD: '1'
+    ports:
+      - "3306:3306"
+    networks:
+      nodejs_server_subnet:
+        ipv4_address: 172.19.0.7
+
+  # redis:
+  #   image: redis:alpine
+  #   container_name: nodejs-redis
+  #   ports:
+  #     - "6379:6379"
+  #   networks:
+  #     nodejs_server_subnet:
+  #       ipv4_address: 172.19.0.8
+
+  # mailhog:
+  #   image: mailhog/mailhog:latest
+  #   container_name: nodejs-mailhog
+  #   ports:
+  #     - "8025:8025"
+  #   networks:
+  #     nodejs_server_subnet:
+  #       ipv4_address: 172.19.0.9
+
+networks:
+  nodejs_server_subnet:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.19.0.0/24
