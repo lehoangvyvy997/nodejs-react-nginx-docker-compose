@@ -17,6 +17,25 @@ Build environment for nodes using docker compose
 - Waiting after the services have built successfully then open a browser and request to [https://123node.com](https://123node.com) and [https://123client.com](https://123client.com)
 
 Note: if has problems from the conflict port then end service conflicted or change a service port in ``docker-compose.yml`` continue rebuild container
+## Step 3: Connect database
+
+### Connect to MySql
+- Install gui mysql tool such as HeidiSQL or Workbench ...
+- Open a gui tool
+- Config information
+- Hostname/Ip: ``127.0.0.1``
+- User: ``root``
+- Passwork: ``1``
+- Port: ``3306``
+- Processing connect
+
+### Connect to MongoDB
+- Install gui mongodb tool such as MongoDB Compass or NoQueryBooster...
+- Open a gui tool
+- Click Connect tag and select ``Connect to``
+- Enter with content ``mongodb://root:1@localhost:27017/nodejs-db`` into a input box
+- Click Connect button
+
 
 Watching files such as ``Dockerfile, docker-compose.yml, ./nginx/*.conf, package.json, .env, *config.js,...`` in order to have detail configurational information.
 
